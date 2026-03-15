@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Kamari Convo Club 🌸</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;background:#fdf8f3;color:#2e1a0e}
+.screen{display:none;width:100%;height:100vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.screen.active{display:flex;flex-direction:column}
+
+/* ── S1 ENVELOPE ── */
+#s1{background:linear-gradient(160deg,#fce8ee 0%,#fdf3e4 60%,#f5e8f0 100%);align-items:center;justify-content:flex-start;padding:2rem 1.4rem 3rem}
+.s1-inner{width:100%;max-width:400px;margin:0 auto;text-align:center}
+.kamari-logo{font-size:.7rem;letter-spacing:.25em;color:#b87a8a;text-transform:uppercase;margin-bottom:.4rem}
+.s1-title{font-family:'Lora',serif;font-size:2rem;font-weight:700;color:#7a2d40;line-height:1.2;margin-bottom:.3rem}
+.s1-sub{font-size:.82rem;color:#a07080;margin-bottom:1.5rem}
+.env-wrap{width:180px;height:130px;margin:0 auto 1.5rem}
+.env-wrap svg{width:100%;height:100%}
+.name-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;color:#b87a8a;text-transform:uppercase;margin-bottom:.7rem}
+.name-grid{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin-bottom:1.5rem}
+.name-chip{background:#fff;border:1.5px solid #e8c8d0;color:#7a2d40;border-radius:2rem;padding:.35rem .9rem;font-size:.8rem;font-weight:500;cursor:pointer;transition:all .18s;font-family:'DM Sans',sans-serif}
+.name-chip:hover{background:#fce8ee;border-color:#c97b8a}
+.name-chip.active{background:#f2d0d8;border-color:#c97b8a;font-weight:700}
+.open-btn{background:#8c3a50;color:#fff;border:none;border-radius:2rem;padding:.75rem 0;font-size:.88rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;width:100%;opacity:.4}
+.open-btn.ready{opacity:1}
+.open-btn.ready:hover{background:#c97b8a}
+
+/* ── S2 LETTER ── */
+#s2{background:#fdf6f0;align-items:center;justify-content:center;padding:2rem 1.4rem}
+.letter-card{background:#fff;border-radius:18px;padding:2rem 1.6rem;max-width:400px;width:100%;box-shadow:0 4px 32px rgba(140,58,80,.08);border:1px solid #f0d8df;animation:fadeUp .5s ease both}
+@keyframes floatUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.letter-floral{text-align:center;font-size:1.4rem;margin-bottom:.8rem;letter-spacing:.2rem}
+.letter-dear{font-family:'Lora',serif;font-size:1.05rem;font-weight:600;color:#8c3a50;margin-bottom:.9rem}
+.letter-body{font-size:.86rem;line-height:1.85;color:#4a2030}
+.letter-body em{color:#8c3a50;font-style:italic}
+.letter-q{margin-top:1rem;background:#fce8ee;border-radius:10px;padding:.85rem 1rem;font-size:.84rem;color:#6a2535;font-weight:500;line-height:1.6;border-left:3px solid #c97b8a}
+.letter-sign{margin-top:1.2rem;font-family:'Lora',serif;font-style:italic;font-size:.86rem;color:#b87a8a;text-align:right}
+.leggo-btn{margin-top:1.4rem;background:#8c3a50;color:#fff;border:none;border-radius:2rem;padding:.72rem 0;font-size:.88rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;width:100%}
+.leggo-btn:hover{background:#c97b8a}
+
+/* ── S3 QUIZ ── */
+#s3{background:#fdf6f0}
+.quiz-wrap{max-width:420px;margin:0 auto;padding:1.4rem 1.2rem 4rem;width:100%}
+.prog-bar{display:flex;align-items:center;gap:.7rem;margin-bottom:1.4rem}
+.prog-dots{display:flex;gap:6px}
+.prog-dot{width:8px;height:8px;border-radius:50%;background:#e8c8d0;transition:all .3s}
+.prog-dot.done{background:#8c3a50}
+.prog-dot.active{width:22px;border-radius:4px;background:#c97b8a}
+.prog-lbl{font-size:.72rem;color:#b87a8a;font-weight:600;margin-left:auto;letter-spacing:.04em}
+.sesh-card{background:linear-gradient(135deg,#fce8ee,#fdf3e4);border-radius:14px;padding:1.1rem 1.2rem;margin-bottom:1.1rem;border:1px solid #f0d8df}
+.sesh-tag{font-size:.62rem;font-weight:700;letter-spacing:.14em;color:#c97b8a;text-transform:uppercase;margin-bottom:.25rem}
+.sesh-title{font-family:'Lora',serif;font-size:1.1rem;font-weight:700;color:#6a2535;line-height:1.25;margin-bottom:.4rem}
+.sesh-quote{font-size:.73rem;color:#a07080;font-style:italic;line-height:1.55;border-top:1px dashed #e8c8d0;padding-top:.5rem}
+.q-card{background:#fff;border-radius:14px;padding:1.2rem;margin-bottom:1rem;border:1.5px solid #f0d8df}
+.q-card.pink{border-left:4px solid #c97b8a}
+.q-card.yellow{border-left:4px solid #d4a020}
+.q-num{font-size:.65rem;font-weight:700;color:#c97b8a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.55rem}
+.q-text{font-size:.87rem;line-height:1.7;margin-bottom:.8rem;color:#2e1a0e}
+.q-text strong{color:#6a2535}
+.q-text em{color:#8c3a50}
+
+/* MC */
+.mc-opts{display:flex;flex-direction:column;gap:.42rem}
+.mc-opt{display:flex;align-items:flex-start;gap:.6rem;padding:.6rem .85rem;border-radius:10px;border:1.5px solid #f0d8df;background:#fdf8f5;cursor:pointer;font-size:.83rem;line-height:1.55;color:#2e1a0e;transition:all .18s;font-family:'DM Sans',sans-serif;word-break:break-word}
+.mc-opt:active{transform:scale(.98)}
+.mc-opt.sel{background:#fce8ee;border-color:#c97b8a}
+.mc-opt.ok{background:#e8f5ee;border-color:#4a9a6a}
+.mc-opt.no{background:#fdeaea;border-color:#c94040}
+.mc-dot{width:22px;height:22px;border-radius:50%;border:1.5px solid #e0c0c8;display:flex;align-items:center;justify-content:center;font-size:.67rem;font-weight:700;color:#b87a8a;flex-shrink:0;min-width:22px;margin-top:2px;transition:all .18s}
+.mc-opt.sel .mc-dot{background:#c97b8a;border-color:#c97b8a;color:#fff}
+.mc-opt.ok .mc-dot{background:#4a9a6a;border-color:#4a9a6a;color:#fff}
+.mc-opt.no .mc-dot{background:#c94040;border-color:#c94040;color:#fff}
+
+/* FILL IN BLANK */
+.word-box{background:#fce8ee;border:1.5px dashed #c97b8a;border-radius:10px;padding:.6rem .9rem;font-size:.8rem;color:#6a2535;margin-bottom:.8rem}
+.word-box strong{color:#c97b8a}
+.passage{background:#fdf8f5;border-radius:10px;padding:1rem 1.1rem;font-size:.87rem;line-height:2.3;border:1px solid #f0d8df;margin-bottom:.6rem}
+.blank{display:inline-block;min-width:85px;border-bottom:2px solid #c97b8a;padding:0 4px;text-align:center;vertical-align:bottom;font-weight:600;color:#8c3a50;font-size:.83rem;cursor:pointer;transition:all .15s;line-height:1.2}
+.blank:empty::before{content:'____';color:#d4aab5;font-weight:400}
+.blank.filled{background:#fce8ee;border-radius:4px 4px 0 0}
+.blank.ok{border-bottom-color:#4a9a6a;background:#e8f5ee;color:#2a6a4a;border-radius:4px 4px 0 0}
+.blank.no{border-bottom-color:#c94040;background:#fdeaea;color:#8a2020;border-radius:4px 4px 0 0}
+.ans-pool{display:flex;flex-wrap:wrap;gap:.38rem;background:#faf3f5;border-radius:10px;padding:.65rem;margin-bottom:.75rem;min-height:44px;border:1.5px dashed #e8c8d0}
+.ans-tok{background:#fff;border:1.5px solid #e0c0c8;color:#6a2535;border-radius:2rem;padding:.3rem .75rem;font-size:.78rem;font-weight:500;cursor:pointer;user-select:none;transition:all .18s;font-family:'DM Sans',sans-serif}
+.ans-tok:hover{background:#fce8ee;border-color:#c97b8a}
+.ans-tok.sel-tok{background:#fce8ee;border-color:#c97b8a;font-weight:600}
+.ans-tok.used{opacity:.3;pointer-events:none}
+
+/* CROSSWORD */
+.cw-wrap{overflow-x:auto;margin-bottom:.8rem}
+.cw-grid{display:inline-flex;flex-direction:column;gap:3px}
+.cw-row{display:flex;gap:3px}
+.cw-cell{width:34px;height:34px;border-radius:5px;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0}
+.cw-cell.blk{background:#2a1018}
+.cw-cell.lit{background:#fff;border:1.5px solid #e0c0c8}
+.cw-cell.lit input{width:100%;height:100%;background:transparent;border:none;outline:none;text-align:center;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:700;color:#6a2535;text-transform:uppercase;caret-color:#c97b8a}
+.cw-cell.lit input:focus{background:#fce8ee}
+.cw-cell.ok{background:#e8f5ee;border-color:#4a9a6a}
+.cw-cell.ok input{color:#2a6a4a}
+.cw-cell.err{background:#fdeaea;border-color:#c94040}
+.cw-cell.err input{color:#8a2020}
+.cw-num{position:absolute;top:2px;left:3px;font-size:.44rem;color:#b87a8a;font-weight:700;line-height:1;pointer-events:none}
+.clues{display:grid;grid-template-columns:1fr 1fr;gap:.5rem 1rem;margin-top:.6rem}
+.clues-head{font-size:.67rem;font-weight:700;color:#c97b8a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem}
+.clue-row{display:flex;gap:.45rem;align-items:flex-start;font-size:.8rem;color:#2e1a0e;margin-bottom:.35rem}
+.clue-badge{background:#fce8ee;color:#c97b8a;font-weight:700;font-size:.67rem;padding:.12rem .4rem;border-radius:4px;white-space:nowrap;margin-top:1px;flex-shrink:0}
+
+/* DIALOG BOX */
+.dialog-box{background:#fce8ee;border-radius:12px;padding:.9rem 1rem;margin-bottom:.9rem;border:1px solid #f0d8df}
+.dialog-head{font-size:.67rem;font-weight:700;color:#c97b8a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.65rem}
+.dialog-row{display:flex;gap:.55rem;align-items:flex-start;margin-bottom:.5rem}
+.dialog-row:last-child{margin-bottom:0}
+.dialog-speaker{font-size:.7rem;font-weight:700;color:#7a2d40;min-width:46px;margin-top:3px;text-transform:uppercase;letter-spacing:.04em}
+.dialog-line{font-size:.84rem;line-height:1.6;color:#2e1a0e}
+.dialog-line em{color:#b87a8a;font-style:italic}
+
+/* BUTTONS */
+.check-btn{width:100%;background:#8c3a50;color:#fff;border:none;border-radius:2rem;padding:.68rem;font-size:.84rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:.75rem;transition:all .2s;letter-spacing:.02em}
+.check-btn:hover{background:#c97b8a}
+.next-btn{width:100%;background:#fff;color:#8c3a50;border:1.5px solid #e8c8d0;border-radius:2rem;padding:.65rem;font-size:.84rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:.55rem;transition:all .2s}
+.next-btn:hover{background:#fce8ee;border-color:#c97b8a}
+.feedback{text-align:center;font-size:.79rem;font-weight:600;margin-top:.55rem;min-height:16px}
+.feedback.ok{color:#2a7a4a}
+.feedback.no{color:#c94040}
+.sesh-div{text-align:center;font-size:.68rem;color:#d4aab5;letter-spacing:.15em;margin:1.4rem 0 .4rem;text-transform:uppercase}
+.done-card{background:#fff;border-radius:18px;padding:1.8rem 1.5rem;text-align:center;border:1px solid #f0d8df;box-shadow:0 4px 24px rgba(140,58,80,.07)}
+.done-emoji{font-size:2.2rem;margin-bottom:.7rem}
+.done-title{font-family:'Lora',serif;font-size:1.25rem;font-weight:700;color:#6a2535;margin-bottom:.45rem}
+.done-sub{font-size:.83rem;color:#a07080;line-height:1.65}
+</style>
+</head>
+<body>
+
+<!-- SCREEN 1: ENVELOPE -->
+<div class="screen active" id="s1">
+<div class="s1-inner">
+  <div class="kamari-logo">✦ Kamari Convo Club ✦</div>
+  <h1 class="s1-title">Final Progress<br>Report 🌸</h1>
+  <p class="s1-sub">A letter is waiting for you!</p>
+
+  <div class="env-wrap">
+    <svg viewBox="0 0 220 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="4" y="40" width="212" height="116" rx="10" fill="#fff" stroke="#e8c8d0" stroke-width="1.5"/>
+      <path d="M4 40 L110 105 L216 40" stroke="#f0d8df" stroke-width="1.5" fill="none"/>
+      <path d="M4 156 L80 100" stroke="#f0d8df" stroke-width="1"/>
+      <path d="M216 156 L140 100" stroke="#f0d8df" stroke-width="1"/>
+      <path d="M4 40 L110 8 L216 40 Z" fill="#fce8ee" stroke="#e8c8d0" stroke-width="1.5"/>
+      <text x="104" y="30" font-size="12" fill="#c97b8a">♥</text>
+      <circle cx="110" cy="110" r="18" fill="#fce8ee" stroke="#e8c8d0" stroke-width="1.2"/>
+      <text x="104" y="115" font-size="11" fill="#c97b8a" font-family="serif">ك</text>
+    </svg>
+  </div>
+
+  <p class="name-label">Tap your name 🌸</p>
+  <div class="name-grid">
+    <div class="name-chip" onclick="pickName(this,'Marissa')">Marissa</div>
+    <div class="name-chip" onclick="pickName(this,'Elza C')">Elza C</div>
+    <div class="name-chip" onclick="pickName(this,'Nailu')">Nailu</div>
+    <div class="name-chip" onclick="pickName(this,'Tifa')">Tifa</div>
+    <div class="name-chip" onclick="pickName(this,'Alda Rahma')">Alda Rahma</div>
+    <div class="name-chip" onclick="pickName(this,'Nadia Jasmine')">Nadia Jasmine</div>
+    <div class="name-chip" onclick="pickName(this,'Bia')">Bia</div>
+    <div class="name-chip" onclick="pickName(this,'Mawaddah')">Mawaddah</div>
+    <div class="name-chip" onclick="pickName(this,'Fatma')">Fatma</div>
+    <div class="name-chip" onclick="pickName(this,'Indira')">Indira</div>
+    <div class="name-chip" onclick="pickName(this,'Tari')">Tari</div>
+    <div class="name-chip" onclick="pickName(this,'Zahra')">Zahra</div>
+    <div class="name-chip" onclick="pickName(this,'Nadya')">Nadya</div>
+    <div class="name-chip" onclick="pickName(this,'Wilda')">Wilda</div>
+    <div class="name-chip" onclick="pickName(this,'Bya')">Bya</div>
+    <div class="name-chip" onclick="pickName(this,'Keisha')">Keisha</div>
+    <div class="name-chip" onclick="pickName(this,'Ana')">Ana</div>
+    <div class="name-chip" onclick="pickName(this,'Salmahan')">Salmahan</div>
+    <div class="name-chip" onclick="pickName(this,'Salsa Billa Yuke')">Salsa Billa Yuke</div>
+    <div class="name-chip" onclick="pickName(this,'Tish')">Tish</div>
+    <div class="name-chip" onclick="pickName(this,'Charina')">Charina</div>
+    <div class="name-chip" onclick="pickName(this,'Verna')">Verna</div>
+    <div class="name-chip" onclick="pickName(this,'Salsabila Nadhifah')">Salsabila Nadhifah</div>
+    <div class="name-chip" onclick="pickName(this,'Aqila')">Aqila</div>
+    <div class="name-chip" onclick="pickName(this,'Rosalina')">Rosalina</div>
+    <div class="name-chip" onclick="pickName(this,'Syarifah')">Syarifah</div>
+    <div class="name-chip" onclick="pickName(this,'Isyana')">Isyana</div>
+    <div class="name-chip" onclick="pickName(this,'Nadisa')">Nadisa</div>
+    <div class="name-chip" onclick="pickName(this,'Noni')">Noni</div>
+    <div class="name-chip" onclick="pickName(this,'Jovita')">Jovita</div>
+    <div class="name-chip" onclick="pickName(this,'Endah')">Endah</div>
+    <div class="name-chip" onclick="pickName(this,'Betari')">Betari</div>
+    <div class="name-chip" onclick="pickName(this,'Hanifah')">Hanifah</div>
+    <div class="name-chip" onclick="pickName(this,'Ria')">Ria</div>
+    <div class="name-chip" onclick="pickName(this,'Ulfah')">Ulfah</div>
+    <div class="name-chip" onclick="pickName(this,'Shady')">Shady</div>
+    <div class="name-chip" onclick="pickName(this,'Dian')">Dian</div>
+  </div>
+  <button class="open-btn" id="open-btn" onclick="openLetter()">Open My Letter 💌</button>
+</div>
+</div>
+
+<!-- SCREEN 2: LETTER -->
+<div class="screen" id="s2">
+<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem 1.4rem">
+  <div class="letter-card">
+    <div class="letter-floral">🌸 ✨ 🌸</div>
+    <div class="letter-dear">Dear Kak <span id="letter-name">—</span>,</div>
+    <div class="letter-body">
+      Our Kamari Convo Club just ended some days ago, but it doesn't mean that our journey stopped here.<br><br>
+      Here is a heartfelt letter, a precious thanks, and a warm-up game for you — to remember that <em>your presence is something we are forever grateful for.</em><br><br>
+      These three weeks were filled with beautiful conversations, deep reflections, and the kind of sisterhood that only comes from choosing to grow together — for the sake of Allah.
+    </div>
+    <div class="letter-q">Ready to start the game and refresh your memory for the past three weeks with us?<br><br><strong>Leggo! 🌿</strong></div>
+    <div class="letter-sign">With love,<br>Kamari Team 🌸</div>
+    <button class="leggo-btn" onclick="go('s2','s3')">Leggo! →</button>
+  </div>
+</div>
+</div>
+
+<!-- SCREEN 3: QUIZ -->
+<div class="screen" id="s3">
+<div class="quiz-wrap">
+
+  <!-- PROGRESS -->
+  <div class="prog-bar">
+    <div class="prog-dots">
+      <div class="prog-dot active" id="pd0"></div>
+      <div class="prog-dot" id="pd1"></div>
+      <div class="prog-dot" id="pd2"></div>
+      <div class="prog-dot" id="pd3"></div>
+      <div class="prog-dot" id="pd4"></div>
+      <div class="prog-dot" id="pd5"></div>
+    </div>
+    <span class="prog-lbl" id="prog-lbl">Session 1 of 6</span>
+  </div>
+
+  <!-- ═══ SESSION 1 ═══ -->
+  <div id="s1q">
+    <div class="sesh-card">
+      <div class="sesh-tag">Session 1 · Linking Devices</div>
+      <div class="sesh-title">Who Am I, Really?</div>
+      <div class="sesh-quote">"And do not be like those who forgot Allah, so He made them forget themselves." — Quran 59:19</div>
+    </div>
+
+    <div class="q-card pink">
+      <div class="q-num">Question 1 · Fill in the Blank</div>
+      <p class="q-text">Tap a word from the pool, then tap a blank to fill it.</p>
+      <div class="ans-pool" id="pool1">
+        <span class="ans-tok" onclick="tapTok(this,'pool1')">Although</span>
+        <span class="ans-tok" onclick="tapTok(this,'pool1')">However</span>
+        <span class="ans-tok" onclick="tapTok(this,'pool1')">as well as</span>
+        <span class="ans-tok" onclick="tapTok(this,'pool1')">As a result</span>
+        <span class="ans-tok" onclick="tapTok(this,'pool1')">Even though</span>
+        <span class="ans-tok" onclick="tapTok(this,'pool1')">but</span>
+      </div>
+      <div class="passage">
+        <span class="blank" id="b1" data-ans="Although" onclick="tapBlank(this,'pool1')"></span>
+        I sometimes feel tired after work, I still try to attend a majlis ilm. In the class, I gain new knowledge
+        <span class="blank" id="b2" data-ans="as well as" onclick="tapBlank(this,'pool1')"></span>
+        build meaningful friendships with other sisters.
+        <span class="blank" id="b3" data-ans="As a result" onclick="tapBlank(this,'pool1')"></span>
+        , these gatherings help me stay motivated to improve my deen.
+      </div>
+      <button class="check-btn" onclick="checkPool(['b1','b2','b3'],'fb1')">Check ✓</button>
+      <div class="feedback" id="fb1"></div>
+    </div>
+
+    <div class="q-card pink">
+      <div class="q-num">Question 2 · Multiple Choice</div>
+      <p class="q-text">Choose the sentence that is <strong>grammatically correct</strong>.</p>
+      <div class="mc-opts" id="mc1" data-ans="3">
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">A</span><span>Despite <em>she was</em> tired, she stayed up for tahajjud.</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">B</span><span>Instead <em>being</em> tired, she stayed up for tahajjud.</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">C</span><span>Despite <em>of being</em> tired, she stayed up for tahajjud.</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">D</span><span>Despite <em>being</em> tired, she stayed up for tahajjud.</span></div>
+      </div>
+      <button class="check-btn" onclick="checkMC('mc1','fb2')">Check ✓</button>
+      <div class="feedback" id="fb2"></div>
+    </div>
+    <button class="next-btn" id="n1" style="display:none" onclick="goSesh(1)">Next: Session 2 →</button>
+  </div>
+
+  <!-- ═══ SESSION 2 ═══ -->
+  <div id="s2q" style="display:none">
+    <div class="sesh-div">— Session 2 —</div>
+    <div class="sesh-card">
+      <div class="sesh-tag">Session 2 · Nominalisation</div>
+      <div class="sesh-title">What Makes a Happy Life?</div>
+      <div class="sesh-quote">"Verily, in the remembrance of Allah do hearts find rest." — Quran 13:28</div>
+    </div>
+    <div class="q-card yellow">
+      <div class="q-num">Question 3 · Crossword</div>
+      <p class="q-text">Write the <strong>noun form</strong> of each word. All 4 horizontal words share one vertical word!</p>
+      <div class="cw-wrap"><div class="cw-grid" id="cwg"></div></div>
+      <div class="clues" id="cwclues"></div>
+      <button class="check-btn" onclick="checkCW()">Check ✓</button>
+      <div class="feedback" id="fb3"></div>
+    </div>
+    <button class="next-btn" id="n2" style="display:none" onclick="goSesh(2)">Next: Session 3 →</button>
+  </div>
+
+  <!-- ═══ SESSION 3 ═══ -->
+  <div id="s3q" style="display:none">
+    <div class="sesh-div">— Session 3 —</div>
+    <div class="sesh-card">
+      <div class="sesh-tag">Session 3 · Phrasal Verbs</div>
+      <div class="sesh-title">Does Being "Pretty" Really Matter?</div>
+      <div class="sesh-quote">"Allah does not look at your appearance or wealth, but at your hearts and deeds." — Prophet ﷺ</div>
+    </div>
+    <div class="q-card pink">
+      <div class="q-num">Question 3 · Multiple Choice</div>
+      <p class="q-text">Amirah feels nervous before presentations. Which sentence shows she is trying to <strong>overcome</strong> that fear?</p>
+      <div class="mc-opts" id="mc3a" data-ans="0">
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">A</span><span>She is <em>getting over</em> her fear of public speaking.</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">B</span><span>She is <em>getting through</em> her fear of public speaking.</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">C</span><span>She is <em>getting around</em> her fear of public speaking.</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">D</span><span>She is <em>getting by</em> her fear of public speaking.</span></div>
+      </div>
+      <button class="check-btn" onclick="checkMC('mc3a','fb3a')">Check ✓</button>
+      <div class="feedback" id="fb3a"></div>
+    </div>
+    <div class="q-card pink">
+      <div class="q-num">Question 4 · Multiple Choice</div>
+      <p class="q-text">Three of these sentences are wrong. Pick the <strong>only correct one</strong>.</p>
+      <div class="mc-opts" id="mc3b" data-ans="3">
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">A</span><span>She is looking forward to <em>meet</em> the new sisters.</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">B</span><span>She is looking forward <em>meeting</em> the new sisters.</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">C</span><span>She looks forward <em>for meeting</em> the new sisters.</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">D</span><span>She is looking forward to <em>meeting</em> the new sisters.</span></div>
+      </div>
+      <button class="check-btn" onclick="checkMC('mc3b','fb3b')">Check ✓</button>
+      <div class="feedback" id="fb3b"></div>
+    </div>
+    <button class="next-btn" id="n3" style="display:none" onclick="goSesh(3)">Next: Session 4 →</button>
+  </div>
+
+  <!-- ═══ SESSION 4 ═══ -->
+  <div id="s4q" style="display:none">
+    <div class="sesh-div">— Session 4 —</div>
+    <div class="sesh-card">
+      <div class="sesh-tag">Session 4 · If Conditional</div>
+      <div class="sesh-title">Does True Love Exist?</div>
+      <div class="sesh-quote">"And among His signs is that He created for you mates and placed between you love and mercy." — Quran 30:21</div>
+    </div>
+    <div class="q-card yellow">
+      <div class="q-num">Question 5 · Multiple Choice</div>
+      <p class="q-text">Which conditional type is used to state a <strong>general fact</strong>?</p>
+      <div class="mc-opts" id="mc4a" data-ans="0">
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">A</span><span>Type 0</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">B</span><span>Type 1</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">C</span><span>Type 2</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">D</span><span>Type 3</span></div>
+      </div>
+      <button class="check-btn" onclick="checkMC('mc4a','fb4a')">Check ✓</button>
+      <div class="feedback" id="fb4a"></div>
+    </div>
+    <div class="q-card yellow">
+      <div class="q-num">Question 6 · Multiple Choice</div>
+      <p class="q-text">Choose the correct <strong>Type 2</strong> conditional sentence.</p>
+      <div class="mc-opts" id="mc4b" data-ans="1">
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">A</span><span>If I had more time, I <em>will</em> join more study circles.</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">B</span><span>If I had more time, I <em>would</em> join more study circles.</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">C</span><span>If I <em>have</em> more time, I would join more study circles.</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">D</span><span>If I had more time, I would <em>joined</em> more study circles.</span></div>
+      </div>
+      <button class="check-btn" onclick="checkMC('mc4b','fb4b')">Check ✓</button>
+      <div class="feedback" id="fb4b"></div>
+    </div>
+    <div class="q-card yellow">
+      <div class="q-num">Question 7 · Multiple Choice</div>
+      <p class="q-text">Choose the correct <strong>Type 3</strong> conditional sentence.</p>
+      <div class="mc-opts" id="mc4c" data-ans="2">
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">A</span><span>If I had slept on time, I <em>would have not miss</em> suhoor.</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">B</span><span>If I <em>slept</em> on time, I would not have missed suhoor.</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">C</span><span>If I had slept on time, I <em>would not have missed</em> suhoor.</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">D</span><span>If I had slept on time, I <em>will</em> not have missed suhoor.</span></div>
+      </div>
+      <button class="check-btn" onclick="checkMC('mc4c','fb4c')">Check ✓</button>
+      <div class="feedback" id="fb4c"></div>
+    </div>
+    <button class="next-btn" id="n4" style="display:none" onclick="goSesh(4)">Next: Session 5 →</button>
+  </div>
+
+  <!-- ═══ SESSION 5 ═══ -->
+  <div id="s5q" style="display:none">
+    <div class="sesh-div">— Session 5 —</div>
+    <div class="sesh-card">
+      <div class="sesh-tag">Session 5 · Idioms & Expressions</div>
+      <div class="sesh-title">Being Rich or Being Wealthy?</div>
+      <div class="sesh-quote">"Richness is not having many possessions. Richness is being content with oneself." — Prophet ﷺ</div>
+    </div>
+    <div class="q-card pink">
+      <div class="q-num">Question 8 · Multiple Choice</div>
+      <p class="q-text">Three idiom–meaning pairs are correct. Which one has an <strong>incorrect</strong> meaning?</p>
+      <div class="mc-opts" id="mc5a" data-ans="2">
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">A</span><span>On cloud nine → very happy</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">B</span><span>Cut to the chase → get to the main point quickly</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">C</span><span>A match made in heaven → two people who argue all the time</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">D</span><span>Take it with a grain of salt → not completely believe something</span></div>
+      </div>
+      <button class="check-btn" onclick="checkMC('mc5a','fb5a')">Check ✓</button>
+      <div class="feedback" id="fb5a"></div>
+    </div>
+    <div class="q-card pink">
+      <div class="q-num">Question 9 · Multiple Choice</div>
+      <p class="q-text">Dian and Ulfah agree that Muslim women should chase their dreams without feeling guilty. Which idiom best describes their situation?</p>
+      <div class="mc-opts" id="mc5b" data-ans="0">
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">A</span><span>They were on the same page.</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">B</span><span>They were in the same boat.</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">C</span><span>They were on the same shoes.</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">D</span><span>They were in the same vein.</span></div>
+      </div>
+      <button class="check-btn" onclick="checkMC('mc5b','fb5b')">Check ✓</button>
+      <div class="feedback" id="fb5b"></div>
+    </div>
+    <button class="next-btn" id="n5" style="display:none" onclick="goSesh(5)">Next: Session 6 →</button>
+  </div>
+
+  <!-- ═══ SESSION 6 ═══ -->
+  <div id="s6q" style="display:none">
+    <div class="sesh-div">— Session 6 —</div>
+    <div class="sesh-card">
+      <div class="sesh-tag">Session 6 · Responding to Opinion</div>
+      <div class="sesh-title">What's Holding Muslim Women Back?</div>
+      <div class="sesh-quote">"The best of you are those who are best to their women." — Prophet ﷺ</div>
+    </div>
+    <div class="q-card yellow">
+      <div class="q-num">Question 10 · Multiple Choice</div>
+      <p class="q-text">Read the dialog. Which response from Sara is most <strong>appropriate and polite</strong>?</p>
+      <div class="dialog-box">
+        <div class="dialog-head">Dialog</div>
+        <div class="dialog-row"><span class="dialog-speaker">Layla</span><span class="dialog-line">"I think Muslim women are held back mostly because of culture, not Islam itself."</span></div>
+        <div class="dialog-row"><span class="dialog-speaker">Sara</span><span class="dialog-line"><em>____________</em></span></div>
+      </div>
+      <div class="mc-opts" id="mc6a" data-ans="2">
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">A</span><span>"No, you're wrong. That's not true at all."</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">B</span><span>"Yes, exactly, and there's nothing more to say about it."</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">C</span><span>"I see your point. In my opinion, education also plays a big role in empowering women."</span></div>
+        <div class="mc-opt" onclick="tapMC(this)"><span class="mc-dot">D</span><span>"I don't know. I've never thought about it."</span></div>
+      </div>
+      <button class="check-btn" onclick="checkMC('mc6a','fb6a')">Check ✓</button>
+      <div class="feedback" id="fb6a"></div>
+    </div>
+    <div class="q-card yellow">
+      <div class="q-num">Question 11 · Fill in the Blank</div>
+      <p class="q-text">Complete the dialog using expressions from the word pool.</p>
+      <div class="ans-pool" id="pool6">
+        <span class="ans-tok" onclick="tapTok(this,'pool6')">I totally agree</span>
+        <span class="ans-tok" onclick="tapTok(this,'pool6')">In my opinion</span>
+        <span class="ans-tok" onclick="tapTok(this,'pool6')">I respectfully disagree</span>
+        <span class="ans-tok" onclick="tapTok(this,'pool6')">That's a great point</span>
+        <span class="ans-tok" onclick="tapTok(this,'pool6')">I'm not sure about that</span>
+      </div>
+      <div class="passage">
+        <div style="display:flex;flex-direction:column;gap:.8rem">
+          <div style="display:flex;gap:.5rem;align-items:flex-start">
+            <span style="font-size:.7rem;font-weight:700;color:#7a2d40;min-width:48px;margin-top:3px">Nadia</span>
+            <span>"Muslim women have so much potential, but society sometimes limits their opportunities."</span>
+          </div>
+          <div style="display:flex;gap:.5rem;align-items:flex-start">
+            <span style="font-size:.7rem;font-weight:700;color:#7a2d40;min-width:48px;margin-top:8px">Hana</span>
+            <span>"<span class="blank" id="b6a" data-ans="I totally agree" onclick="tapBlank(this,'pool6')"></span>. Muslim women have proven their resilience throughout history."</span>
+          </div>
+          <div style="display:flex;gap:.5rem;align-items:flex-start">
+            <span style="font-size:.7rem;font-weight:700;color:#7a2d40;min-width:48px;margin-top:8px">Nadia</span>
+            <span>"<span class="blank" id="b6b" data-ans="In my opinion" onclick="tapBlank(this,'pool6')"></span>, the key is to encourage and support each other."</span>
+          </div>
+          <div style="display:flex;gap:.5rem;align-items:flex-start">
+            <span style="font-size:.7rem;font-weight:700;color:#7a2d40;min-width:48px;margin-top:8px">Hana</span>
+            <span>"<span class="blank" id="b6c" data-ans="That's a great point" onclick="tapBlank(this,'pool6')"></span>. Sisterhood is one of the most powerful things we have."</span>
+          </div>
+        </div>
+      </div>
+      <button class="check-btn" onclick="checkPool(['b6a','b6b','b6c'],'fb6b')">Check ✓</button>
+      <div class="feedback" id="fb6b"></div>
+    </div>
+
+    <div class="done-card" id="done-card" style="display:none;margin-top:1rem">
+      <div class="done-emoji" id="done-emoji">🌸✨🌸</div>
+      <div class="done-title">You made it, Kak <span id="done-name"></span>!</div>
+
+      <!-- SCORE DISPLAY -->
+      <div style="margin:1rem 0;background:linear-gradient(135deg,#fce8ee,#fdf3e4);border-radius:14px;padding:1rem 1.2rem;border:1px solid #f0d8df">
+        <div style="font-size:.67rem;font-weight:700;color:#c97b8a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem">Your Score</div>
+        <div style="display:flex;align-items:baseline;justify-content:center;gap:.4rem;margin-bottom:.3rem">
+          <span id="score-num" style="font-family:'Lora',serif;font-size:2.8rem;font-weight:700;color:#6a2535;line-height:1"></span>
+          <span style="font-size:1rem;color:#a07080;font-weight:600">/ 14</span>
+        </div>
+        <div id="score-pct" style="font-size:.8rem;color:#a07080;text-align:center"></div>
+      </div>
+
+      <!-- PERSONAL FEEDBACK -->
+      <div id="score-feedback" style="background:#fff;border-radius:12px;padding:1rem 1.1rem;border:1px solid #f0d8df;text-align:left;margin-bottom:1.2rem">
+        <div id="fb-icon" style="font-size:1.6rem;text-align:center;margin-bottom:.5rem"></div>
+        <div id="fb-title" style="font-family:'Lora',serif;font-size:1rem;font-weight:700;color:#6a2535;margin-bottom:.4rem;text-align:center"></div>
+        <div id="fb-body" style="font-size:.83rem;line-height:1.75;color:#4a2030"></div>
+      </div>
+
+      <!-- BOUQUET + LETTER -->
+      <div id="bouquet-section" style="text-align:center">
+        <!-- SVG Bouquet -->
+        <svg id="bouquet" viewBox="0 0 220 200" xmlns="http://www.w3.org/2000/svg" style="width:180px;height:165px;margin:0 auto .5rem;display:block;animation:floatUp .8s ease both">
+          <!-- stems -->
+          <line x1="110" y1="195" x2="90"  y2="130" stroke="#6a8a4a" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="110" y1="195" x2="110" y2="125" stroke="#6a8a4a" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="110" y1="195" x2="130" y2="130" stroke="#6a8a4a" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="110" y1="195" x2="75"  y2="140" stroke="#8aaa5a" stroke-width="2" stroke-linecap="round"/>
+          <line x1="110" y1="195" x2="145" y2="140" stroke="#8aaa5a" stroke-width="2" stroke-linecap="round"/>
+          <!-- leaves -->
+          <ellipse cx="82" cy="158" rx="10" ry="5" fill="#7aaa4a" transform="rotate(-40,82,158)" opacity=".85"/>
+          <ellipse cx="138" cy="158" rx="10" ry="5" fill="#7aaa4a" transform="rotate(40,138,158)" opacity=".85"/>
+          <!-- ribbon -->
+          <path d="M95 188 Q110 180 125 188 Q110 196 95 188Z" fill="#f2a0b0"/>
+          <path d="M100 186 Q110 192 120 186" fill="none" stroke="#e08090" stroke-width="1.5"/>
+          <!-- wrapping paper -->
+          <path d="M80 170 Q110 165 140 170 L148 195 Q110 200 72 195Z" fill="#fce8ee" stroke="#e8c8d0" stroke-width="1"/>
+          <path d="M80 170 Q110 162 140 170" fill="none" stroke="#e8b0c0" stroke-width="1" stroke-dasharray="3,2"/>
+          <!-- center big rose — pink -->
+          <circle cx="110" cy="115" r="16" fill="#e8709a"/>
+          <circle cx="110" cy="115" r="11" fill="#f090b0"/>
+          <circle cx="110" cy="115" r="7"  fill="#faaec8"/>
+          <circle cx="110" cy="115" r="3"  fill="#fce4ee"/>
+          <!-- left rose — dusty pink -->
+          <circle cx="82"  cy="124" r="13" fill="#d4607a"/>
+          <circle cx="82"  cy="124" r="9"  fill="#e8809a"/>
+          <circle cx="82"  cy="124" r="5"  fill="#f8a8c0"/>
+          <!-- right rose — mauve -->
+          <circle cx="138" cy="124" r="13" fill="#c07080"/>
+          <circle cx="138" cy="124" r="9"  fill="#d890a0"/>
+          <circle cx="138" cy="124" r="5"  fill="#eeb0c0"/>
+          <!-- left small flower — yellow -->
+          <circle cx="66"  cy="135" r="9"  fill="#f0c84a"/>
+          <circle cx="66"  cy="135" r="5"  fill="#fce080"/>
+          <circle cx="66"  cy="135" r="2"  fill="#fff"/>
+          <!-- right small flower — lavender -->
+          <circle cx="154" cy="135" r="9"  fill="#c0a0d8"/>
+          <circle cx="154" cy="135" r="5"  fill="#dcc0f0"/>
+          <circle cx="154" cy="135" r="2"  fill="#fff"/>
+          <!-- tiny sparkles -->
+          <text x="56"  y="115" font-size="12" fill="#f0c84a" opacity=".9">✦</text>
+          <text x="148" y="110" font-size="10" fill="#c97b8a" opacity=".8">✦</text>
+          <text x="100" y="96"  font-size="8"  fill="#a0c060" opacity=".9">✦</text>
+        </svg>
+
+        <!-- LETTER CARD -->
+        <div style="background:#fffcf8;border-radius:16px;padding:1.4rem 1.3rem;border:1.5px solid #f0d8df;text-align:left;box-shadow:0 2px 16px rgba(140,58,80,.07);margin-top:.5rem;animation:fadeUp .9s ease both">
+          <div style="text-align:center;font-size:1rem;letter-spacing:.2rem;margin-bottom:.8rem">🌸 ✨ 🌸</div>
+          <div style="font-family:'Lora',serif;font-size:1rem;font-weight:700;color:#8c3a50;margin-bottom:.9rem">Dear Kakari! 🌟</div>
+          <div style="font-size:.84rem;line-height:1.85;color:#4a2030">
+            Oh, what a joy it has been having you in our Kamari Convo Club sessions! Thank you for showing up, sharing your thoughts, and being a wonderful part of our Kamari Convo Club sessions.
+            <br><br>
+            I truly hope and pray that every laugh, every thought shared, and every connection made counts as a flowing good deed for us this blessed Ramadhan, because it really felt like something special! 💫
+            <br><br>
+            The fun doesn't stop here though, this is just the beginning! See you at the next KCC, yes?! 🎉🌙
+          </div>
+          <div style="margin-top:1.1rem;font-family:'Lora',serif;font-style:italic;font-size:.86rem;color:#b87a8a;text-align:right">
+            With so much love and appreciation,<br>
+            <strong style="font-style:normal;color:#8c3a50">Your Class Assistants 🫶🏻</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONFETTI CANVAS -->
+      <canvas id="confetti-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999"></canvas>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+// ── STATE ─────────────────────────────────────────────────────
+let myName = '';
+let activeTok = null;
+
+// Score tracking: each key maps to points earned
+const scores = {
+  b1:0, b2:0, b3:0,       // Q1 blanks (1pt each)
+  mc1:0,                   // Q2 (1pt)
+  cw:0,                    // Q3 crossword (5 words = 5pt)
+  mc3a:0, mc3b:0,          // Q4,Q5 (1pt each)
+  mc4a:0, mc4b:0, mc4c:0,  // Q6,Q7,Q8 (1pt each)
+  mc5a:0, mc5b:0,          // Q9,Q10 (1pt each)
+  b6a:0, b6b:0, b6c:0      // Q11 blanks (1pt each)
+};
+// Total = 14
+
+function calcTotal() {
+  return Object.values(scores).reduce((a,b) => a+b, 0);
+}
+
+function showDoneCard() {
+  const total = calcTotal();
+  const pct = Math.round(total / 14 * 100);
+
+  document.getElementById('done-card').style.display = 'block';
+  document.getElementById('done-name').textContent = myName;
+  document.getElementById('score-num').textContent = total;
+  document.getElementById('score-pct').textContent = pct + '%';
+
+  let emoji, title, body;
+  if (total >= 13) {
+    emoji = '🌟';
+    title = 'Exceptional, Kak ' + myName + '!';
+    body = 'Subhanallah, you remembered everything beautifully! Your dedication to learning shows in every answer. You have truly absorbed the lessons — linking devices, nominalisation, phrasal verbs, conditionals, idioms, and giving opinions all feel natural to you. Keep this momentum and keep growing, your English is a gift you can use to share goodness. 🌸';
+  } else if (total >= 11) {
+    emoji = '✨';
+    title = 'Masha Allah, so close to perfect!';
+    body = 'You did amazingly well, Kak ' + myName + '! Just a few small slips here and there, but your overall understanding is really strong. Review the ones that caught you off guard — sometimes it\'s just the tiny details (like "despite being" vs "despite of being") that make the difference. You\'ve got this! 💛';
+  } else if (total >= 8) {
+    emoji = '🌼';
+    title = 'Good effort, Kak ' + myName + '!';
+    body = 'You\'re doing well! You clearly understand most of the material from our three weeks together. Some topics might need a little more review — perhaps revisit the conditional types or the linking devices. Remember, language learning is a journey, not a destination. Every mistake is just a stepping stone. Keep going! 🌿';
+  } else if (total >= 5) {
+    emoji = '💪';
+    title = 'Keep going, Kak ' + myName + '!';
+    body = 'You gave it your best shot, and that\'s what matters most! Some of the grammar topics seem to need a bit more practice — and that\'s completely okay. Islam teaches us that seeking knowledge is an ongoing act of worship. Go back to the sessions that felt tricky, review with your sisters, and don\'t give up. Your effort is never wasted. 🤍';
+  } else {
+    emoji = '🤍';
+    title = 'Jazakillah for trying, Kak ' + myName + '!';
+    body = 'Everyone starts somewhere, and the fact that you showed up and tried is already something to be proud of. Don\'t be discouraged — the material covers a lot of ground! Take your time to revisit each session\'s grammar focus. Remember, "Allah does not burden a soul beyond that it can bear." You can do this, one step at a time. 🌙';
+  }
+
+  document.getElementById('done-emoji').textContent = emoji;
+  document.getElementById('fb-icon').textContent = emoji;
+  document.getElementById('fb-title').textContent = title;
+  document.getElementById('fb-body').textContent = body;
+
+  document.getElementById('s3').scrollTo({ top: 99999, behavior: 'smooth' });
+
+  // fire confetti after a short delay
+  setTimeout(launchConfetti, 600);
+}
+
+// ── CONFETTI ─────────────────────────────────────────────────
+function launchConfetti() {
+  const canvas = document.getElementById('confetti-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const colors = ['#f2a0b0','#c97b8a','#f5d97e','#d4a020','#b0d88a','#8c3a50','#fce8ee','#e8c8d0'];
+  const pieces = Array.from({length: 120}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * -canvas.height,
+    r: Math.random() * 7 + 3,
+    d: Math.random() * 120 + 40,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    tilt: Math.random() * 10 - 5,
+    tiltSpeed: Math.random() * 0.1 + 0.05,
+    angle: 0,
+    shape: Math.random() > 0.5 ? 'circle' : 'rect',
+  }));
+
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(p => {
+      p.angle += p.tiltSpeed;
+      p.y += (Math.cos(p.angle) * 2 + 2);
+      p.x += Math.sin(p.angle) * 1.5;
+      p.tilt = Math.sin(p.angle) * 12;
+      ctx.beginPath();
+      ctx.fillStyle = p.color;
+      if (p.shape === 'circle') {
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      } else {
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.tilt * Math.PI / 180);
+        ctx.rect(-p.r, -p.r / 2, p.r * 2, p.r);
+        ctx.restore();
+      }
+      ctx.fill();
+    });
+    frame++;
+    if (frame < 220) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  draw();
+}
+
+// ── SCREEN 1: PICK NAME ───────────────────────────────────────
+function pickName(el, name) {
+  document.querySelectorAll('.name-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  myName = name;
+  const btn = document.getElementById('open-btn');
+  btn.classList.add('ready');
+  btn.textContent = 'Open My Letter, Kak ' + name + ' \uD83D\uDC8C';
+}
+
+function openLetter() {
+  if (!myName) return;
+  document.getElementById('letter-name').textContent = myName;
+  go('s1', 's2');
+}
+
+function go(from, to) {
+  document.getElementById(from).classList.remove('active');
+  document.getElementById(to).classList.add('active');
+  document.getElementById(to).scrollTop = 0;
+}
+
+// ── SESSION NAVIGATION ─────────────────────────────────────────
+const SESH_IDS = ['s1q','s2q','s3q','s4q','s5q','s6q'];
+const NEXT_IDS = ['n1','n2','n3','n4','n5'];
+const DOTS = ['pd0','pd1','pd2','pd3','pd4','pd5'];
+
+function goSesh(idx) {
+  document.getElementById(SESH_IDS[idx-1]).style.display = 'none';
+  document.getElementById(SESH_IDS[idx]).style.display = 'block';
+  document.getElementById(DOTS[idx-1]).className = 'prog-dot done';
+  document.getElementById(DOTS[idx]).className = 'prog-dot active';
+  document.getElementById('prog-lbl').textContent = 'Session ' + (idx+1) + ' of 6';
+  document.getElementById('s3').scrollTop = 0;
+  if (idx === 1) buildCW();
+}
+
+function showNext(btnId) {
+  const btn = document.getElementById(btnId);
+  if (btn) btn.style.display = 'block';
+}
+
+// reveal logic per session
+function tryReveal(seshIdx) {
+  if (seshIdx === 0) {
+    // sesh1: mc1 checked
+    if (document.getElementById('mc1').dataset.locked) showNext('n1');
+  } else if (seshIdx === 1) {
+    // sesh2: crossword done
+    // handled inside checkCW
+  } else if (seshIdx === 2) {
+    // sesh3: both mc3a and mc3b checked
+    if (document.getElementById('mc3a').dataset.locked && document.getElementById('mc3b').dataset.locked) showNext('n3');
+  } else if (seshIdx === 3) {
+    // sesh4: all 3 checked
+    if (document.getElementById('mc4a').dataset.locked && document.getElementById('mc4b').dataset.locked && document.getElementById('mc4c').dataset.locked) showNext('n4');
+  } else if (seshIdx === 4) {
+    // sesh5: both checked
+    if (document.getElementById('mc5a').dataset.locked && document.getElementById('mc5b').dataset.locked) showNext('n5');
+  } else if (seshIdx === 5) {
+    if (document.getElementById('mc6a').dataset.locked &&
+        document.getElementById('fb6b').textContent.includes('Perfect')) {
+      showDoneCard();
+    }
+  }
+}
+
+// ── MC ────────────────────────────────────────────────────────
+function tapMC(el) {
+  const g = el.closest('.mc-opts');
+  if (g.dataset.locked) return;
+  g.querySelectorAll('.mc-opt').forEach(o => o.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+function checkMC(gId, fbId) {
+  const g = document.getElementById(gId);
+  if (g.dataset.locked) return;
+  g.dataset.locked = '1';
+  const opts = g.querySelectorAll('.mc-opt');
+  const ci = parseInt(g.dataset.ans);
+  const got = opts[ci].classList.contains('sel');
+  opts.forEach((o, i) => {
+    if (i === ci) { o.classList.remove('sel'); o.classList.add('ok'); }
+    else if (o.classList.contains('sel')) { o.classList.remove('sel'); o.classList.add('no'); }
+  });
+  const fb = document.getElementById(fbId);
+  fb.className = 'feedback ' + (got ? 'ok' : 'no');
+  fb.textContent = got ? '✨ Correct! Well done!' : 'Not quite — see the green answer!';
+  if (got) scores[gId] = 1;
+  const seshMap = {mc1:0, mc3a:2, mc3b:2, mc4a:3, mc4b:3, mc4c:3, mc5a:4, mc5b:4, mc6a:5};
+  tryReveal(seshMap[gId] ?? -1);
+}
+
+// ── FILL IN BLANK ─────────────────────────────────────────────
+function tapTok(el, poolId) {
+  if (el.classList.contains('used')) return;
+  document.querySelectorAll('#' + poolId + ' .ans-tok').forEach(t => t.classList.remove('sel-tok'));
+  activeTok = el;
+  el.classList.add('sel-tok');
+}
+
+function tapBlank(slot, poolId) {
+  if (!activeTok) return;
+  // return previous token
+  const prev = slot.dataset.filled;
+  if (prev) {
+    const old = Array.from(document.querySelectorAll('#' + poolId + ' .ans-tok')).find(t => t.textContent === prev);
+    if (old) { old.classList.remove('used'); }
+  }
+  slot.textContent = activeTok.textContent;
+  slot.dataset.filled = activeTok.textContent;
+  slot.classList.add('filled');
+  slot.classList.remove('ok','no');
+  activeTok.classList.add('used');
+  activeTok.classList.remove('sel-tok');
+  activeTok = null;
+}
+
+function checkPool(ids, fbId) {
+  let c = 0;
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    const filled = (el.dataset.filled || '').toLowerCase();
+    el.classList.remove('ok','no','filled');
+    if (filled === el.dataset.ans.toLowerCase()) {
+      el.classList.add('ok'); c++;
+      scores[id] = 1;
+    } else {
+      el.classList.add('no');
+      scores[id] = 0;
+    }
+  });
+  const fb = document.getElementById(fbId);
+  const all = c === ids.length;
+  fb.className = 'feedback ' + (all ? 'ok' : 'no');
+  fb.textContent = all ? '✨ Perfect! All correct!' : c + '/' + ids.length + ' correct — try again!';
+  if (fbId === 'fb1' && all) showNext('n1');
+  if (fbId === 'fb6b') tryReveal(5);
+}
+
+// ── CROSSWORD ─────────────────────────────────────────────────
+// Layout verified:
+// CURIOSITY  H row0 col0   (0-8)
+// GROWTH     H row2 col4   (4-9)  — GROWTH[1]=R = STRENGTH[2]=R at (2,5)
+// KNOWLEDGE  H row3 col0   (0-8)  — KNOWLEDGE[5]=E = STRENGTH[3]=E at (3,5)
+// HAPPINESS  H row4 col0   (0-8)  — HAPPINESS[5]=N = STRENGTH[4]=N at (4,5)
+// STRENGTH   V col5 row0   (0-7)  — CURIOSITY[5]=S = STRENGTH[0]=S at (0,5)
+const CW = [
+  {w:'CURIOSITY', d:'H', r:0, c:0, lbl:'1 →', clue:'"curious" adj → noun'},
+  {w:'GROWTH',    d:'H', r:2, c:4, lbl:'2 →', clue:'"grow" v → noun'},
+  {w:'KNOWLEDGE', d:'H', r:3, c:0, lbl:'3 →', clue:'"know" v → noun'},
+  {w:'HAPPINESS', d:'H', r:4, c:0, lbl:'4 →', clue:'"happy" adj → noun'},
+  {w:'STRENGTH',  d:'V', r:0, c:5, lbl:'5 ↓', clue:'"strong" adj → noun'},
+];
+const CWROWS=8, CWCOLS=10;
+let cwCells={};
+
+function buildCW() {
+  const grid=Array.from({length:CWROWS},()=>Array(CWCOLS).fill(null));
+  CW.forEach(w=>{
+    for(let i=0;i<w.w.length;i++){
+      const r=w.d==='H'?w.r:w.r+i, c=w.d==='H'?w.c+i:w.c;
+      if(r<CWROWS&&c<CWCOLS&&!grid[r][c]) grid[r][c]={ch:w.w[i]};
+    }
+  });
+  const el=document.getElementById('cwg');
+  el.innerHTML=''; cwCells={};
+  for(let r=0;r<CWROWS;r++){
+    if(!grid[r].some(x=>x)) continue;
+    const row=document.createElement('div'); row.className='cw-row';
+    for(let c=0;c<CWCOLS;c++){
+      const cell=document.createElement('div');
+      if(!grid[r][c]){ cell.className='cw-cell blk'; }
+      else {
+        cell.className='cw-cell lit';
+        const start=CW.find(w=>(w.d==='H'&&w.r===r&&w.c===c)||(w.d==='V'&&w.r===r&&w.c===c));
+        if(start){ const n=document.createElement('span'); n.className='cw-num'; n.textContent=CW.indexOf(start)+1; cell.appendChild(n); }
+        const inp=document.createElement('input'); inp.maxLength=1;
+        inp.dataset.r=r; inp.dataset.c=c;
+        inp.addEventListener('input',e=>{
+          e.target.value=e.target.value.toUpperCase().replace(/[^A-Z]/g,'');
+          if(e.target.value){
+            const nr=el.querySelector('input[data-r="'+(r)+'"][data-c="'+(c+1)+'"]');
+            const nd=el.querySelector('input[data-r="'+(r+1)+'"][data-c="'+c+'"]');
+            if(nr) nr.focus(); else if(nd) nd.focus();
+          }
+        });
+        cell.appendChild(inp); cwCells[r+','+c]={el:cell,inp,ch:grid[r][c].ch};
+      }
+      row.appendChild(cell);
+    }
+    el.appendChild(row);
+  }
+  const cl=document.getElementById('cwclues');
+  const across=CW.filter(w=>w.d==='H'), down=CW.filter(w=>w.d==='V');
+  cl.innerHTML='<div><div class="clues-head">Across →</div>'+across.map(w=>'<div class="clue-row"><span class="clue-badge">'+w.lbl+'</span><span>'+w.clue+'</span></div>').join('')+'</div>'
+    +'<div><div class="clues-head">Down ↓</div>'+down.map(w=>'<div class="clue-row"><span class="clue-badge">'+w.lbl+'</span><span>'+w.clue+'</span></div>').join('')+'</div>';
+}
+
+function checkCW(){
+  let ok=0;
+  CW.forEach(w=>{
+    let wok=true;
+    for(let i=0;i<w.w.length;i++){
+      const r=w.d==='H'?w.r:w.r+i, c=w.d==='H'?w.c+i:w.c;
+      const cell=cwCells[r+','+c]; if(!cell) continue;
+      cell.el.classList.remove('ok','err');
+      if(cell.inp.value.toUpperCase()===cell.ch){ cell.el.classList.add('ok'); }
+      else { cell.el.classList.add('err'); wok=false; }
+    }
+    if(wok) ok++;
+  });
+  const fb=document.getElementById('fb3');
+  fb.className='feedback '+(ok===CW.length?'ok':'no');
+  fb.textContent=ok===CW.length?'✨ All correct! Masha Allah!':ok+'/'+CW.length+' words — check the red letters!';
+  scores['cw'] = ok;
+  if(ok===CW.length) showNext('n2');
+}
+</script>
+</body>
+</html>
